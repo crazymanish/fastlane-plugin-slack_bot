@@ -4,7 +4,7 @@ require_relative '../helper/slack_bot_helper'
 module Fastlane
   module Actions
     class PostToSlackAction < Action
-      def self.run(params)
+      def self.run(options)
         require 'slack-notifier'
 
         options[:message] = (options[:message].to_s || '').gsub('\n', "\n")
