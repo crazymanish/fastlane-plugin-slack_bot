@@ -1,0 +1,3 @@
+lane :test do
+  slack_bot
+end
