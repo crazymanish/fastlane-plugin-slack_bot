@@ -28,6 +28,23 @@ bundle exec fastlane add_plugin slack_bot
 
 3. Add `slack_bot` to your lane in `Fastfile` whenever you want to post a slack message
 
+In the following example lets send a message to the default slack bot channel.
+
+```ruby
+# share on Slack
+  post_to_slack(message: "App successfully released!")
+```
+
+In the following example lets send a direct message to a slack user that unit tests CI has been failed.
+
+```ruby
+# share on Slack
+  post_to_slack(
+    message: "CI: Your unit tests on #{ENV['CI_COMMIT_REF_NAME']} failed",
+    channel: "@SlackUsername" # This can be Slack userID, instead of username i.e @UXXXXX
+  )
+```
+
 In the following example lets send slack message to `#ios-team` channel for test-flight build.
 
 ```ruby
@@ -41,22 +58,10 @@ lane :beta do
   
   # share on Slack
   post_to_slack(
-    api_token: "xyz", # Preferably configure as ENV['SLACK_API_TOKEN']
     message: "Hi team, we have a new test-flight beta build: #{beta_release_name}",
     channel: "#ios-team"
   )
 end
-```
-
-In the following example lets send a direct message to a slack user that unit tests CI has been failed.
-
-```ruby
-# share on Slack
-  post_to_slack(
-    api_token: "xyz", # Preferably configure as ENV['SLACK_API_TOKEN']
-    message: "CI: Your unit tests on #{ENV['CI_COMMIT_REF_NAME']} failed",
-    channel: "@SlackUsername" # This can be Slack user id, instead of username i.e @UXXXXX
-  )
 ```
 
 In the following example lets send slack message with custom payload.
