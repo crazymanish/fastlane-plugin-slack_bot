@@ -4,12 +4,12 @@
 
 ## About slack_bot
 
-A fastlane plugin to post slack message using bot api token. 🚀
+A fastlane plugin to post slack message using bot api token. 🚀 
 Note: `Fastlane` comes with `slack` plugin by default, which uses slack webhook url, which can't send direct message & other limitations.
 
 ## Getting Started
 
-1. Generate `Slack token` for `Fastlane` bot
+1. [Generate `Slack token` for `Fastlane` bot](https://slack.com/intl/en-nl/help/articles/115005265703-Create-a-bot-for-your-workspace)
     - From your Slack organization page, go to `Manage` -> `Custom Integrations`
     - Open `Bots`
     - Add Configuration
@@ -46,6 +46,44 @@ lane :beta do
     channel: "#ios-team"
   )
 end
+```
+
+In the following example lets send a direct message to a slack user that unit tests CI has been failed.
+
+```ruby
+# share on Slack
+  post_to_slack(
+    api_token: "xyz", # Preferably configure as ENV['SLACK_API_TOKEN']
+    message: "CI: Your unit tests on #{ENV['CI_COMMIT_REF_NAME']} failed",
+    channel: "@SlackUsername" # This can be Slack user id, instead of username i.e @UXXXXX
+  )
+```
+
+In the following example lets send slack message with custom payload.
+
+```ruby
+# share on Slack
+slack(
+  api_token: "xyz", # Preferably configure as ENV['SLACK_API_TOKEN']
+  message: "App successfully released!",
+  channel: "#channel",  # Optional, by default will post to the default channel configured for the Slack Bot.
+  success: true,        # Optional, defaults to true.
+  payload: {  # Optional, lets you specify any number of your own Slack attachments.
+    "Build Date" => Time.new.to_s,
+    "Built by" => "Jenkins",
+  },
+  default_payloads: [:git_branch, :git_author], # Optional, lets you specify an allowlist of default payloads to include. Pass an empty array to suppress all the default payloads.
+        # Don't add this key, or pass nil, if you want all the default payloads. The available default payloads are: `lane`, `test_result`, `git_branch`, `git_author`, `last_git_commit`, `last_git_commit_hash`.
+  attachment_properties: { # Optional, lets you specify any other properties available for attachments in the slack API (see https://api.slack.com/docs/attachments).
+       # This hash is deep merged with the existing properties set using the other properties above. This allows your own fields properties to be appended to the existing fields that were created using the `payload` property for instance.
+    thumb_url: "http://example.com/path/to/thumb.png",
+    fields: [{
+      title: "My Field",
+      value: "My Value",
+      short: true
+    }]
+  }
+)
 ```
 
 ## Issues and Feedback
