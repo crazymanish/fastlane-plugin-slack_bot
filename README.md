@@ -4,7 +4,7 @@
 
 ## About slack_bot
 
-A fastlane plugin to post slack message using bot api token. 🚀 
+A fastlane plugin to post slack message using bot api token. 🚀\
 Note: `Fastlane` comes with `slack` plugin by default, which uses slack webhook url, which can't send direct message & other limitations.
 
 ## Getting Started
@@ -63,7 +63,7 @@ In the following example lets send slack message with custom payload.
 
 ```ruby
 # share on Slack
-slack(
+post_to_slack(
   api_token: "xyz", # Preferably configure as ENV['SLACK_API_TOKEN']
   message: "App successfully released!",
   channel: "#channel",  # Optional, by default will post to the default channel configured for the Slack Bot.
