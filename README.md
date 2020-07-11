@@ -28,6 +28,8 @@ bundle exec fastlane add_plugin slack_bot
 
 3. Add `slack_bot` to your lane in `Fastfile` whenever you want to post a slack message
 
+## Examples
+
 In the following example lets send a message to the default slack bot channel.
 
 ```ruby
