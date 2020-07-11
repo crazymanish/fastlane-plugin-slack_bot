@@ -5,7 +5,7 @@
 ## About slack_bot
 
 A fastlane plugin to post slack message using bot api token. 🚀\
-Note: `Fastlane` comes with `slack` plugin by default, which uses slack webhook url, which can't send direct message & other limitations.
+Note: `Fastlane` comes with `slack` plugin by default, which uses slack webhook url, which can't send direct message & other webhook limitations.
 
 ## Getting Started
 
