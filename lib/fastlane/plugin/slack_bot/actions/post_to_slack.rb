@@ -33,7 +33,7 @@ module Fastlane
           payload = payload.to_json
 
           response = Excon.post(api_url, headers: headers, body: payload)
-          result = formatted_result(response)
+          result = self.formatted_result(response)
         rescue => exception
           UI.error("Exception: #{exception}")
           return nil
@@ -44,15 +44,15 @@ module Fastlane
         end
       end
 
-      def formatted_result(response)
+      def self.formatted_result(response)
         result = {
           status: response[:status],
           body: response.body || "",
-          json: parse_json(response.body) || {}
+          json: self.parse_json(response.body) || {}
         }
       end
 
-      def parse_json(value)
+      def self.parse_json(value)
         require 'json'
 
         JSON.parse(value)
