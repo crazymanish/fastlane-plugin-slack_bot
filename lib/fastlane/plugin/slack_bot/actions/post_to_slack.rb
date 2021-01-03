@@ -3,6 +3,10 @@ require_relative '../helper/slack_bot_helper'
 
 module Fastlane
   module Actions
+    module SharedValues
+      POST_TO_SLACK_RESULT = :POST_TO_SLACK_RESULT
+    end
+
     class PostToSlackAction < Action
       def self.run(options)
         require 'slack-notifier'
@@ -24,14 +28,36 @@ module Fastlane
 
           api_url = "https://slack.com/api/chat.postMessage"
           headers = { "Content-Type": "application/json", "Authorization": "Bearer #{options[:api_token]}" }
-          payload = { channel: slack_channel, attachments: [slack_attachment] }.to_json
+          payload = { channel: slack_channel, attachments: [slack_attachment] }
+          payload[:thread_ts] = options[:thread_ts] unless options[:thread_ts].nil?
+          payload = payload.to_json
 
-          Excon.post(api_url, headers: headers, body: payload)
+          response = Excon.post(api_url, headers: headers, body: payload)
+          result = formatted_result(response)
         rescue => exception
           UI.error("Exception: #{exception}")
+          return nil
         else
           UI.success("Successfully sent Slack notification")
+          Actions.lane_context[SharedValues::POST_TO_SLACK_RESULT] = result
+          return result
         end
+      end
+
+      def formatted_result(response)
+        result = {
+          status: response[:status],
+          body: response.body || "",
+          json: parse_json(response.body) || {}
+        }
+      end
+
+      def parse_json(value)
+        require 'json'
+
+        JSON.parse(value)
+      rescue JSON::ParserError
+        nil
       end
 
       def self.description
@@ -85,7 +111,11 @@ module Fastlane
                                        description: "Was this successful? (true/false)",
                                        optional: true,
                                        default_value: true,
-                                       is_string: false)
+                                       is_string: false),
+          FastlaneCore::ConfigItem.new(key: :thread_ts,
+                                       env_name: "FL_POST_TO_SLACK_THREAD_TS",
+                                       description: "Provide another message's ts value to make this message a reply",
+                                       optional: true)
         ]
       end
 
