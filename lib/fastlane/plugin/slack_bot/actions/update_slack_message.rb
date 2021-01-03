@@ -4,32 +4,23 @@ require_relative '../helper/slack_bot_helper'
 module Fastlane
   module Actions
     module SharedValues
-      POST_TO_SLACK_RESULT = :POST_TO_SLACK_RESULT
+      UPDATE_SLACK_MESSAGE_RESULT = :UPDATE_SLACK_MESSAGE_RESULT
     end
-
-    class PostToSlackAction < Action
+    class UpdateSlackMessageAction < Action
       def self.run(options)
         require 'slack-notifier'
 
         options[:message] = (options[:message].to_s || '').gsub('\n', "\n")
         options[:message] = Slack::Notifier::Util::LinkFormatter.format(options[:message])
         options[:pretext] = options[:pretext].gsub('\n', "\n") unless options[:pretext].nil?
-
-        if options[:channel].to_s.length > 0
-          slack_channel = options[:channel]
-          slack_channel = ('#' + options[:channel]) unless ['#', 'C', '@'].include?(slack_channel[0]) # Add prefix(#) by default, if needed
-        end
-
         slack_attachment = SlackAction.generate_slack_attachments(options)
 
         begin
           require 'excon'
 
-          api_url = "https://slack.com/api/chat.postMessage"
+          api_url = "https://slack.com/api/chat.update"
           headers = { "Content-Type": "application/json", "Authorization": "Bearer #{options[:api_token]}" }
-          payload = { channel: slack_channel, attachments: [slack_attachment] }
-          payload[:thread_ts] = options[:thread_ts] unless options[:thread_ts].nil?
-          payload = payload.to_json
+          payload = { channel: options[:channel], attachments: [slack_attachment], ts: options[:ts] }.to_json
 
           response = Excon.post(api_url, headers: headers, body: payload)
           result = self.formatted_result(response)
@@ -37,8 +28,8 @@ module Fastlane
           UI.error("Exception: #{exception}")
           return nil
         else
-          UI.success("Successfully sent Slack notification")
-          Actions.lane_context[SharedValues::POST_TO_SLACK_RESULT] = result
+          UI.success("Successfully updated the Slack message")
+          Actions.lane_context[SharedValues::UPDATE_SLACK_MESSAGE_RESULT] = result
           return result
         end
       end
@@ -60,17 +51,13 @@ module Fastlane
       end
 
       def self.description
-        "Post a slack message"
-      end
-
-      def self.details
-        "Post a slack message to any #channel/@user using Slack bot chat postMessage api."
+        "Update a slack message using time-stamp(ts) value"
       end
 
       def self.available_options
         [
           FastlaneCore::ConfigItem.new(key: :api_token,
-                                       env_name: "FL_POST_TO_SLACK_BOT_TOKEN",
+                                       env_name: "FL_UPDATE_SLACK_MESSAGE_BOT_TOKEN",
                                        description: "Slack bot Token",
                                        sensitive: true,
                                        code_gen_sensitive: true,
@@ -78,43 +65,43 @@ module Fastlane
                                        default_value: ENV["SLACK_API_TOKEN"],
                                        default_value_dynamic: true,
                                        optional: false),
+          FastlaneCore::ConfigItem.new(key: :ts,
+                                       env_name: "FL_UPDATE_SLACK_MESSAGE_TS",
+                                       description: "Timestamp of the message to be updated",
+                                       optional: false),
           FastlaneCore::ConfigItem.new(key: :channel,
-                                       env_name: "FL_POST_TO_SLACK_CHANNEL",
-                                       description: "#channel or @username",
-                                       optional: true),
+                                       env_name: "FL_UPDATE_SLACK_MESSAGE_CHANNEL",
+                                       description: "Slack channel i.e C1234567890",
+                                       optional: false),
           FastlaneCore::ConfigItem.new(key: :pretext,
-                                       env_name: "FL_POST_TO_SLACK_PRETEXT",
+                                       env_name: "FL_UPDATE_SLACK_MESSAGE_PRETEXT",
                                        description: "This is optional text that appears above the message attachment block. This supports the standard Slack markup language",
                                        optional: true),
           FastlaneCore::ConfigItem.new(key: :message,
-                                       env_name: "FL_POST_TO_SLACK_MESSAGE",
+                                       env_name: "FL_UPDATE_SLACK_MESSAGE_MESSAGE",
                                        description: "The message that should be displayed on Slack",
                                        optional: true),
           FastlaneCore::ConfigItem.new(key: :payload,
-                                       env_name: "FL_POST_TO_SLACK_PAYLOAD",
+                                       env_name: "FL_UPDATE_SLACK_MESSAGE_PAYLOAD",
                                        description: "Add additional information to this post. payload must be a hash containing any key with any value",
                                        default_value: {},
                                        is_string: false),
           FastlaneCore::ConfigItem.new(key: :default_payloads,
-                                       env_name: "FL_POST_TO_SLACK_DEFAULT_PAYLOADS",
+                                       env_name: "FL_UPDATE_SLACK_MESSAGE_DEFAULT_PAYLOADS",
                                        description: "Remove some of the default payloads. More information about the available payloads on GitHub",
                                        optional: true,
                                        type: Array),
           FastlaneCore::ConfigItem.new(key: :attachment_properties,
-                                       env_name: "FL_POST_TO_SLACK_ATTACHMENT_PROPERTIES",
+                                       env_name: "FL_UPDATE_SLACK_MESSAGE_ATTACHMENT_PROPERTIES",
                                        description: "Merge additional properties in the slack attachment, see https://api.slack.com/docs/attachments",
                                        default_value: {},
                                        is_string: false),
           FastlaneCore::ConfigItem.new(key: :success,
-                                       env_name: "FL_POST_TO_SLACK_SUCCESS",
+                                       env_name: "FL_UPDATE_SLACK_MESSAGE_SUCCESS",
                                        description: "Was this successful? (true/false)",
                                        optional: true,
                                        default_value: true,
-                                       is_string: false),
-          FastlaneCore::ConfigItem.new(key: :thread_ts,
-                                       env_name: "FL_POST_TO_SLACK_THREAD_TS",
-                                       description: "Provide another message's ts value to make this message a reply",
-                                       optional: true)
+                                       is_string: false)
         ]
       end
 
@@ -124,10 +111,15 @@ module Fastlane
 
       def self.example_code
         [
-          'post_to_slack(message: "App successfully released!")',
-          'post_to_slack(
-            message: "App successfully released!",
-            channel: "#channel",  # Optional, by default will post to the default channel configured for the POST URL.
+          'update_slack_message(
+            ts: "1609711037.000100",
+            channel: "C1234567890",
+            message: "Update: App successfully released!"
+          )',
+          'update_slack_message(
+            ts: "1609711037.000100",
+            channel: "C1234567890",
+            message: "Update: App successfully released!",
             success: true,        # Optional, defaults to true.
             payload: {            # Optional, lets you specify any number of your own Slack attachments.
               "Build Date" => Time.new.to_s,
