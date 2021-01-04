@@ -90,6 +90,7 @@ module Fastlane
                                        env_name: "FL_UPDATE_SLACK_MESSAGE_DEFAULT_PAYLOADS",
                                        description: "Remove some of the default payloads. More information about the available payloads on GitHub",
                                        optional: true,
+                                       default_value: ['lane', 'test_result', 'git_branch', 'git_author', 'last_git_commit', 'last_git_commit_hash'],
                                        type: Array),
           FastlaneCore::ConfigItem.new(key: :attachment_properties,
                                        env_name: "FL_UPDATE_SLACK_MESSAGE_ATTACHMENT_PROPERTIES",
