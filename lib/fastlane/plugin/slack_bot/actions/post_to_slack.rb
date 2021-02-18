@@ -21,13 +21,23 @@ module Fastlane
         end
 
         slack_attachment = SlackAction.generate_slack_attachments(options)
+        bot_username = options[:username]
+        bot_icon_url = options[:icon_url]
 
         begin
           require 'excon'
 
           api_url = "https://slack.com/api/chat.postMessage"
-          headers = { "Content-Type": "application/json", "Authorization": "Bearer #{options[:api_token]}" }
-          payload = { channel: slack_channel, attachments: [slack_attachment] }
+          headers = {
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer #{options[:api_token]}"
+          }
+          payload = {
+            channel: slack_channel,
+            username: bot_username,
+            icon_url: bot_icon_url,
+            attachments: [slack_attachment]
+          }
           payload[:thread_ts] = options[:thread_ts] unless options[:thread_ts].nil?
           payload = payload.to_json
 
@@ -81,6 +91,18 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :channel,
                                        env_name: "FL_POST_TO_SLACK_CHANNEL",
                                        description: "#channel or @username",
+                                       optional: true),
+          FastlaneCore::ConfigItem.new(key: :username,
+                                       env_name: "FL_SLACK_USERNAME",
+                                       description: "Overrides the bot's username (chat:write.customize scope required)",
+                                       default_value: "fastlane",
+                                       is_string: true,
+                                       optional: true),
+          FastlaneCore::ConfigItem.new(key: :icon_url,
+                                       env_name: "FL_SLACK_ICON_URL",
+                                       description: "Overrides the bot's image (chat:write.customize scope required)",
+                                       default_value: "https://fastlane.tools/assets/img/fastlane_icon.png",
+                                       is_string: true,
                                        optional: true),
           FastlaneCore::ConfigItem.new(key: :pretext,
                                        env_name: "FL_POST_TO_SLACK_PRETEXT",
