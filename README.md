@@ -63,14 +63,14 @@ Using this `slack_bot` plugin, you can:
 
 ## Examples
 
-In the following example lets send a message to the default slack bot channel.
+Let’s post a message to the default slack bot channel.
 
 ```ruby
 # share on Slack
   post_to_slack(message: "App successfully released!")
 ```
 
-In the following example lets send a direct message to a slack user that unit tests CI has been failed.
+Let’s post a direct message to a slack user that unit tests CI has been failed.
 
 ```ruby
 # share on Slack
@@ -80,7 +80,7 @@ In the following example lets send a direct message to a slack user that unit te
   )
 ```
 
-In the following example lets send slack message to `#ios-team` channel for test-flight build.
+Let’s post a slack message to the `#ios-team` channel about the new test-flight build.
 
 ```ruby
 lane :beta do
@@ -99,7 +99,7 @@ lane :beta do
 end
 ```
 
-In the following example lets send slack message with custom payload.
+Let’s post a slack message with custom payload.
 
 ```ruby
 # share on Slack
