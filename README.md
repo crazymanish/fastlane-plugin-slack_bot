@@ -11,7 +11,8 @@ A fastlane plugin to customize your automation workflow(s) with a **Slack Bot** 
 - [About](#about)
 - [Getting Started](#getting-started)
 - [Features](#features)
-- [Examples](#examples)
+- [Post a message](#examples-post-a-message) examples
+- [Upload a file](#examples-upload-a-message) examples
 - [About Fastlane](#about-fastlane)
 
 ## About
