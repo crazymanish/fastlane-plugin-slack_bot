@@ -1,12 +1,12 @@
 ## Fastlane `slack_bot` plugin
 
-[![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-slack_bot) 
-![![License]](https://img.shields.io/badge/license-MIT-green.svg?style=flat) 
-[![Gem Version](https://badge.fury.io/rb/fastlane-plugin-slack_bot.svg)](https://badge.fury.io/rb/fastlane-plugin-slack_bot) 
-![![RubyGem Download Badge]](https://ruby-gem-downloads-badge.herokuapp.com/fastlane-plugin-slack_bot?type=total) 
+[![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-slack_bot)
+![![License]](https://img.shields.io/badge/license-MIT-green.svg?style=flat)
+[![Gem Version](https://badge.fury.io/rb/fastlane-plugin-slack_bot.svg)](https://badge.fury.io/rb/fastlane-plugin-slack_bot)
+![![RubyGem Download Badge]](https://ruby-gem-downloads-badge.herokuapp.com/fastlane-plugin-slack_bot?type=total)
 [![Twitter: @manish](https://img.shields.io/badge/contact-@manish-blue.svg?style=flat)](https://twitter.com/manish_rathi_)
 
-A fastlane plugin to customize your automation workflow(s) with a **Slack Bot** 🤖 using the [Slack APIs](https://api.slack.com/) 
+A fastlane plugin to customize your automation workflow(s) with a **Slack Bot** 🤖 using the [Slack APIs](https://api.slack.com/)
 
 - [About](#about)
 - [Getting Started](#getting-started)
@@ -23,7 +23,7 @@ i.e Listing couple of slack **webhook url** limitations:
 - can’t post a message inside a slack thread.
 - can’t update a posted slack message.
 - can’t list and upload a file inside a slack channel.
-- much more, compare to a **Slack Bot** 🤖 using the [Slack APIs](https://api.slack.com/) 
+- much more, compare to a **Slack Bot** 🤖 using the [Slack APIs](https://api.slack.com/)
 
 ## Getting Started
 
@@ -41,7 +41,7 @@ fastlane add_plugin slack_bot
 ```
 If you are using fastlane using Gemfile in your project, add it to your project by running:
 ```bash
-bundle exec fastlane add_plugin slack_bot 
+bundle exec fastlane add_plugin slack_bot
 ```
 
 3. Use `slack_bot` features inside your lane in `Fastfile` whenever you want.
@@ -50,18 +50,26 @@ bundle exec fastlane add_plugin slack_bot
 Using this `slack_bot` plugin, you can:
 
 - Post a message using [chat.postMessage](https://api.slack.com/methods/chat.postMessage) Slack API
-  - [x] Posts a message to a _public_ channel
-  - [x] Posts a message to a _private_ channel
-  - [x] Posts a message to a _slack user_ (DM)
-  - [x] Posts a message inside a _slack thread_ 🧵  (DM)
+  - [x] Post a message to a _public_ channel
+  - [x] Post a message to a _private_ channel
+  - [x] Post a message to a _slack user_ (DM)
+  - [x] Post a message inside a _slack thread_ 🧵  (DM)
 
 - Update a message using [chat.update](https://api.slack.com/methods/chat.update) Slack API
-  - [x] updates a message in a channel
+  - [x] update a message in a channel
 
 - List of files in a channel using [files.list](https://api.slack.com/methods/files.list) Slack API
   - [x] A list of files in a channel, It can be filtered and sliced in various ways.
 
-## Examples
+- Upload a file using [files.upload](https://api.slack.com/methods/files.upload) Slack API
+  - [x] Upload a file to a _public_ channel
+  - [x] Upload a file to a _private_ channel
+  - [x] Upload a file to a _slack user_ (DM)
+  - [x] Upload a file inside a _slack thread_ 🧵  (DM)
+  - [x] Upload a file with multiple channels/users
+
+
+## Examples (Post a message)
 
 Let’s post a message to the default slack bot channel.
 
@@ -86,11 +94,11 @@ Let’s post a slack message to the `#ios-team` channel about the new test-fligh
 lane :beta do
   gym # Build the app and create .ipa file
   pilot # Upload build to TestFlight
-  
+
   version_number = get_version_number # Get project version
   build_number = get_build_number # Get build number
   beta_release_name = "#{version_number}-#{build_number}-beta-release"
-  
+
   # share on Slack
   post_to_slack(
     message: "Hi team, we have a new test-flight beta build: #{beta_release_name}",
@@ -126,7 +134,7 @@ post_to_slack(
 )
 ```
 
-Let’s post a slack message inside a slack thread 🧵 
+Let’s post a slack message inside a slack thread 🧵
 
 ```ruby
 lane :release do
@@ -141,7 +149,7 @@ lane :release do
 
   gym # Build the app and create .ipa file
 
-  # Post an update in release thread 
+  # Post an update in release thread
   post_to_slack(
     message: "App has been build successfully! 💪",
     channel: "#ios-team",
@@ -150,10 +158,75 @@ lane :release do
 
   deliver # Upload build to AppStore
 
-  # Post an update in release thread 
+  # Post an update in release thread
   post_to_slack(
     message: "App has been uploaded to the AppStore and submitted for Apple's review! 🚀",
     channel: "#ios-team",
+    thread_ts: release_thread_ts
+  )
+end
+```
+
+## Examples (Upload a file)
+
+Let’s Upload a file to a slack channel that main branch unit tests has been failed, see scan logs.
+
+```ruby
+# File upload on Slack
+file_upload_to_slack(
+  initial_comment: "CI: main-branch unit tests failed",
+  file_path: "scan.log",
+  channels: "#ios-team" # Comma-separated list of slack #channel names where the file will be shared
+)
+```
+
+Let’s Upload a file to a slack user that your branch unit tests has been failed, see scan logs.
+
+```ruby
+# File upload on Slack
+file_upload_to_slack(
+  initial_comment: "CI: Your unit tests on #{ENV['CI_COMMIT_REF_NAME']} failed",
+  file_path: "scan.log",
+  channels: "@SlackUsername" # This can be Slack userID, instead of username i.e @UXXXXX
+)
+```
+
+Let’s Upload a file inside a slack thread 🧵
+
+```ruby
+lane :release do
+  # Start the release with slack release thread
+  release_thread = post_to_slack(
+    message: "Good morning team, CI has started the AppStore release. You can find more information inside this thread 🧵",
+    channel: "#ios-team"
+  )
+
+  # Important: Save this slack thread timestamp for futher slack messages
+  release_thread_ts = release_thread[:json]["ts"]
+
+  gym # Build the app and create .ipa file
+
+  # Post an update in release thread
+  post_to_slack(
+    message: "App has been build successfully! 💪",
+    channel: "#ios-team",
+    thread_ts: release_thread_ts
+  )
+
+  deliver # Upload build to AppStore
+
+  # Post an update in release thread
+  post_to_slack(
+    message: "App has been uploaded to the AppStore and submitted for Apple's review! 🚀",
+    channel: "#ios-team",
+    thread_ts: release_thread_ts
+  )
+
+  # Spaceship logs file upload on Slack
+  file_upload_to_slack(
+    initial_comment: "Deliver:: Spaceship logs",
+    file_path: "spaceship.log",
+    channels: "#ios-team",
     thread_ts: release_thread_ts
   )
 end
