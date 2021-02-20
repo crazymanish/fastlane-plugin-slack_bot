@@ -17,7 +17,7 @@ A fastlane plugin to customize your automation workflow(s) with a **Slack Bot** 
 ## About
 
 A fastlane plugin to post slack message and much more using Slack bot api token. 🚀\
-Note: `Fastlane` comes with built-in `slack` action by default, which uses slack webhook url and have webhook limitations.\ 
+**Note:** `Fastlane` comes with built-in `slack` action by default, which uses slack webhook url and have webhook limitations.  
 i.e Listing couple of slack **webhook url** limitations:
 - can't post a direct message to a slack user.
 - can’t post a message inside a slack thread.
