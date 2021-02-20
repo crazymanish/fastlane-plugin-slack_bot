@@ -67,17 +67,17 @@ Let’s post a message to the default slack bot channel.
 
 ```ruby
 # share on Slack
-  post_to_slack(message: "App successfully released!")
+post_to_slack(message: "App successfully released!")
 ```
 
 Let’s post a direct message to a slack user that unit tests CI has been failed.
 
 ```ruby
 # share on Slack
-  post_to_slack(
-    message: "CI: Your unit tests on #{ENV['CI_COMMIT_REF_NAME']} failed",
-    channel: "@SlackUsername" # This can be Slack userID, instead of username i.e @UXXXXX
-  )
+post_to_slack(
+  message: "CI: Your unit tests on #{ENV['CI_COMMIT_REF_NAME']} failed",
+  channel: "@SlackUsername" # This can be Slack userID, instead of username i.e @UXXXXX
+)
 ```
 
 Let’s post a slack message to the `#ios-team` channel about the new test-flight build.
@@ -124,6 +124,39 @@ post_to_slack(
     }]
   }
 )
+```
+
+Let’s post a slack message inside a slack thread 🧵 
+
+```ruby
+lane :release do
+  # Start the release with slack release thread
+  release_thread = post_to_slack(
+    message: "Good morning team, CI has started the AppStore release. You can find more information inside this thread 🧵",
+    channel: "#ios-team"
+  )
+
+  # Important: Save this slack thread timestamp for futher slack messages
+  release_thread_ts = release_thread[:json]["ts"]
+
+  gym # Build the app and create .ipa file
+
+  # Post an update in release thread 
+  post_to_slack(
+    message: "App has been build successfully! 💪",
+    channel: "#ios-team",
+    thread_ts: release_thread_ts
+  )
+
+  deliver # Upload build to AppStore
+
+  # Post an update in release thread 
+  post_to_slack(
+    message: "App has been uploaded to the AppStore and submitted for Apple's review! 🚀",
+    channel: "#ios-team",
+    thread_ts: release_thread_ts
+  )
+end
 ```
 
 ## About Fastlane
