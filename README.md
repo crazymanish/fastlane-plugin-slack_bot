@@ -55,7 +55,7 @@ Using this `slack_bot` plugin, you can:
   - [x] Post a message to a _private_ channel
   - [x] Post a message to a _slack user_ (DM)
   - [x] Post a message inside a _slack thread_ 🧵
-  - [x] Post a message with custom Bot username and icon
+  - [x] Post a message with _custom Bot username and icon_
 
 - Update a message using [chat.update](https://api.slack.com/methods/chat.update) Slack API
   - [x] update a message in a channel
@@ -68,7 +68,7 @@ Using this `slack_bot` plugin, you can:
   - [x] Upload a file to a _private_ channel
   - [x] Upload a file to a _slack user_ (DM)
   - [x] Upload a file inside a _slack thread_ 🧵
-  - [x] Upload a file with multiple channels/users
+  - [x] Upload a file with _multiple channels/users_
 
 
 ## Examples (Post a message)
