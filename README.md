@@ -175,7 +175,7 @@ Let’s post a message with custom slack bot username and icon
 # share on Slack
 post_to_slack(
   message: "App successfully released!",
-  username: "Release Bot", # Overrides the bot's image
+  username: "Release Bot", # Overrides the bot's username
   icon_url: "https://fastlane.tools/assets/img/fastlane_icon.png" # Overrides the bot's icon
 )
 ```
