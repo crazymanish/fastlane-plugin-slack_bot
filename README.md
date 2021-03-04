@@ -54,7 +54,8 @@ Using this `slack_bot` plugin, you can:
   - [x] Post a message to a _public_ channel
   - [x] Post a message to a _private_ channel
   - [x] Post a message to a _slack user_ (DM)
-  - [x] Post a message inside a _slack thread_ 🧵  (DM)
+  - [x] Post a message inside a _slack thread_ 🧵
+  - [x] Post a message with custom Bot username and icon
 
 - Update a message using [chat.update](https://api.slack.com/methods/chat.update) Slack API
   - [x] update a message in a channel
@@ -66,7 +67,7 @@ Using this `slack_bot` plugin, you can:
   - [x] Upload a file to a _public_ channel
   - [x] Upload a file to a _private_ channel
   - [x] Upload a file to a _slack user_ (DM)
-  - [x] Upload a file inside a _slack thread_ 🧵  (DM)
+  - [x] Upload a file inside a _slack thread_ 🧵
   - [x] Upload a file with multiple channels/users
 
 
@@ -166,6 +167,17 @@ lane :release do
     thread_ts: release_thread_ts
   )
 end
+```
+
+Let’s post a message with custom slack bot username and icon
+
+```ruby
+# share on Slack
+post_to_slack(
+  message: "App successfully released!",
+  username: "Release Bot", # Overrides the bot's image
+  icon_url: "https://fastlane.tools/assets/img/fastlane_icon.png" # Overrides the bot's icon
+)
 ```
 
 ## Examples (Upload a file)
