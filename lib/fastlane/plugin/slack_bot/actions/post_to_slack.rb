@@ -38,6 +38,7 @@ module Fastlane
             icon_url: bot_icon_url,
             attachments: [slack_attachment]
           }
+          payload[:as_user] = options[:as_user] if options[:as_user] # default is false
           payload[:thread_ts] = options[:thread_ts] unless options[:thread_ts].nil?
           payload = payload.to_json
 
@@ -104,6 +105,12 @@ module Fastlane
                                        default_value: "https://fastlane.tools/assets/img/fastlane_icon.png",
                                        is_string: true,
                                        optional: true),
+          FastlaneCore::ConfigItem.new(key: :as_user,
+                                       env_name: "FL_POST_TO_SLACK_AS_USER",
+                                       description: "Pass true to post the message as the authed user. Defaults to false",
+                                       optional: true,
+                                       default_value: false,
+                                       is_string: false),
           FastlaneCore::ConfigItem.new(key: :pretext,
                                        env_name: "FL_POST_TO_SLACK_PRETEXT",
                                        description: "This is optional text that appears above the message attachment block. This supports the standard Slack markup language",
