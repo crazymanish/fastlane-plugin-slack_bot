@@ -1,5 +1,7 @@
 require 'fastlane/action'
 require_relative '../helper/slack_bot_helper'
+require_relative '../helper/slack_bot_attachments_helper'
+require_relative '../helper/slack_bot_link_formatter_helper'
 
 module Fastlane
   module Actions
@@ -9,10 +11,8 @@ module Fastlane
 
     class PostToSlackAction < Action
       def self.run(options)
-        require 'slack-notifier'
-
         options[:message] = (options[:message].to_s || '').gsub('\n', "\n")
-        options[:message] = Slack::Notifier::Util::LinkFormatter.format(options[:message])
+        options[:message] = Helper::SlackBotLinkFormatterHelper.format(options[:message])
         options[:pretext] = options[:pretext].gsub('\n', "\n") unless options[:pretext].nil?
 
         if options[:channel].to_s.length > 0
@@ -20,7 +20,7 @@ module Fastlane
           slack_channel = ('#' + options[:channel]) unless ['#', 'C', '@'].include?(slack_channel[0]) # Add prefix(#) by default, if needed
         end
 
-        slack_attachment = SlackAction.generate_slack_attachments(options)
+        slack_attachment = Helper::SlackBotAttachmentsHelper.generate_slack_attachments(options)
         bot_username = options[:username]
         bot_icon_url = options[:icon_url]
 
