@@ -29,9 +29,7 @@ i.e Listing couple of slack **webhook url** limitations:
 ## Getting Started
 
 1. [Generate `Slack token` for `Fastlane` bot](https://slack.com/intl/en-nl/help/articles/115005265703-Create-a-bot-for-your-workspace)
-    - From your Slack organization page, go to `Manage` -> `Custom Integrations`
-    - Open `Bots`
-    - Add Configuration
+    - Add a slack `Bot` user
     - Choose a name for your bot, e.g. `"fastlane"`
     - Save `API Token`
 
