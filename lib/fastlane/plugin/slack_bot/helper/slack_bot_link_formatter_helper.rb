@@ -32,14 +32,14 @@ module Fastlane
 
         class << self
           def format string, opts={}
-            SlackBotLinkFormatterHelper.new(string, opts).formatted
+            SlackBotLinkFormatterHelper.new(string, **opts).formatted
           end
         end
 
         attr_reader :formats
 
-        def initialize string, formats: %i[html markdown]
-          @formats = formats
+        def initialize string, opts = {}
+          @formats = opts[:formats] || %i[html markdown]
           @orig    = string.respond_to?(:scrub) ? string.scrub : string
         end
 
