@@ -42,7 +42,7 @@ module Fastlane
           payload[:thread_ts] = options[:thread_ts] unless options[:thread_ts].nil?
           payload = payload.to_json
 
-          response = Excon.post(api_url, headers: headers, body: payload)
+          response = Excon.post(api_url, headers: headers, body: payload, omit_default_port: true)
           result = self.formatted_result(response)
         rescue => exception
           UI.error("Exception: #{exception}")
