@@ -24,7 +24,7 @@ i.e Listing couple of slack **webhook url** limitations:
 - can’t post a message inside a slack thread.
 - can’t update a posted slack message.
 - can’t list and upload a file inside a slack channel.
-- much more, compare to a **Slack Bot** 🤖 using the [Slack APIs](https://api.slack.com/)
+- many more, compare to a **Slack Bot** 🤖 using the [Slack APIs](https://api.slack.com/)
 
 ## Getting Started
 
