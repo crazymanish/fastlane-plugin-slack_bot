@@ -39,6 +39,7 @@ module Fastlane
             attachments: [slack_attachment]
           }
           payload[:as_user] = options[:as_user] if options[:as_user] # default is false
+          payload[:reply_broadcast] = options[:reply_broadcast] if options[:reply_broadcast] # default is false
           payload[:thread_ts] = options[:thread_ts] unless options[:thread_ts].nil?
           payload = payload.to_json
 
@@ -144,7 +145,13 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :thread_ts,
                                        env_name: "FL_POST_TO_SLACK_THREAD_TS",
                                        description: "Provide another message's ts value to make this message a reply",
-                                       optional: true)
+                                       optional: true),
+          FastlaneCore::ConfigItem.new(key: :reply_broadcast,
+                                       env_name: "FL_POST_TO_SLACK_REPLY_BROADCAST",
+                                       description: "Used in conjunction with thread_ts and indicates whether reply should be made visible to everyone in the channel or conversation. Defaults to false",
+                                       optional: true,
+                                       default_value: false,
+                                       is_string: false)
         ]
       end
 
