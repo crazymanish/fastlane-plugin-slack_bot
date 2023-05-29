@@ -12,6 +12,8 @@ A fastlane plugin to customize your automation workflow(s) with a **Slack Bot** 
 - [Getting Started](#getting-started)
 - [Features](#features)
 - [Post a message](#examples-post-a-message) examples
+- [Update a message](https://github.com/crazymanish/fastlane-plugin-slack_bot/blob/master/lib/fastlane/plugin/slack_bot/actions/update_slack_message.rb#L115) examples
+- [Delete a message](https://github.com/crazymanish/fastlane-plugin-slack_bot/blob/master/lib/fastlane/plugin/slack_bot/actions/delete_slack_message.rb#L78) examples
 - [Upload a file](#examples-upload-a-message) examples
 - [About Fastlane](#about-fastlane)
 
@@ -57,6 +59,9 @@ Using this `slack_bot` plugin, you can:
 
 - Update a message using [chat.update](https://api.slack.com/methods/chat.update) Slack API
   - [x] update a message in a channel
+
+- Delete a message using [chat.delete](https://api.slack.com/methods/chat.delete) Slack API
+  - [x] delete a message in a channel
 
 - List of files in a channel using [files.list](https://api.slack.com/methods/files.list) Slack API
   - [x] A list of files in a channel, It can be filtered and sliced in various ways.
