@@ -8,8 +8,6 @@ module Fastlane
     end
     class DeleteSlackMessageAction < Action
       def self.run(options)
-        options[:message] = (options[:message].to_s || '').gsub('\n', "\n")
-
         begin
           require 'excon'
 
