@@ -144,7 +144,7 @@ module Fastlane
                                        is_string: false),
           FastlaneCore::ConfigItem.new(key: :no_color,
                                        env_name: "FL_POST_TO_SLACK_NO_COLOR",
-                                       description: "Removes the border on the left side. If true, :success option will be ignored.",
+                                       description: "Removes the border on the left side. If true, :success option will be ignored",
                                        optional: true,
                                        default_value: false,
                                        is_string: false),
