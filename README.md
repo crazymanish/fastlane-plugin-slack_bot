@@ -3,7 +3,8 @@
 [![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-slack_bot)
 ![![License]](https://img.shields.io/badge/license-MIT-green.svg?style=flat)
 [![Gem Version](https://badge.fury.io/rb/fastlane-plugin-slack_bot.svg)](https://badge.fury.io/rb/fastlane-plugin-slack_bot)
-[![Twitter: @manish](https://img.shields.io/badge/contact-@manish-blue.svg?style=flat)](https://twitter.com/iammanishrathi)
+![Gem Download Badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fgem-badge.onrender.com%2Fdownloads%2Ffastlane-plugin-slack_bot)
+[![Mail: @manish](https://img.shields.io/badge/contact-@manish-blue.svg?style=flat)](mailto:i.am.manish.rathi@gmail.com)
 <!--![![RubyGem Download Badge]](https://ruby-gem-downloads-badge.herokuapp.com/fastlane-plugin-slack_bot?type=total)-->
 
 A fastlane plugin to customize your automation workflow(s) with a **Slack Bot** 🤖 using the [Slack APIs](https://api.slack.com/)
